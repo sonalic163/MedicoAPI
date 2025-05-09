@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "0eLzJWkvoJ7zVUVk3/sZHxHj/0oxJusrV4H2psByHmY=",
+  "Source": "MedicoAPI",
+  "BasePath": "_content/MedicoAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

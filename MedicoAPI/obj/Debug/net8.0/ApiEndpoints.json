@@ -1,0 +1,133 @@
+[
+  {
+    "ContainingType": "MedicoAPI.Controllers.DepartmentController",
+    "Method": "GetDepartmentWithDoctors",
+    "RelativePath": "api/Department/GetDepartmentWithDoctors",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicoAPI.Controllers.DepartmentController",
+    "Method": "GetDoctorsById",
+    "RelativePath": "api/Department/GetDoctorsById",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "doctorId",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicoAPI.Controllers.DepartmentController",
+    "Method": "GetDoctorsInfo",
+    "RelativePath": "api/Department/GetDoctorsInfo",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicoAPI.Controllers.PatientDetailsController",
+    "Method": "AddFeedbackDetails",
+    "RelativePath": "api/PatientDetails/AddFeedbackDetails",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "feedbackDetails",
+        "Type": "MedicoAPI.Models.FeedbackDetails",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicoAPI.Controllers.PatientDetailsController",
+    "Method": "AddPatientDetails",
+    "RelativePath": "api/PatientDetails/AddPatientDetails",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "appointmentDetails",
+        "Type": "MedicoAPI.Models.AppointmentDetails",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicoAPI.Controllers.PatientDetailsController",
+    "Method": "GetFeedbackDetails",
+    "RelativePath": "api/PatientDetails/GetFeedbackDetails",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicoAPI.Controllers.PatientDetailsController",
+    "Method": "SendEmail",
+    "RelativePath": "api/PatientDetails/send",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "receivedEmail",
+        "Type": "MedicoAPI.Models.ReceivedEmail",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicoAPI.Controllers.PatientDetailsController",
+    "Method": "SendMail",
+    "RelativePath": "api/PatientDetails/SendMail",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "receivedEmail",
+        "Type": "MedicoAPI.Models.ReceivedEmail",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "MedicoAPI.Controllers.WeatherForecastController",
+    "Method": "Get",
+    "RelativePath": "WeatherForecast",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": [
+      {
+        "Type": "System.Collections.Generic.IEnumerable\u00601[[MedicoAPI.WeatherForecast, MedicoAPI, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+        "MediaTypes": [
+          "text/plain",
+          "application/json",
+          "text/json"
+        ],
+        "StatusCode": 200
+      }
+    ],
+    "EndpointName": "GetWeatherForecast"
+  }
+]
