@@ -16,10 +16,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Add steps for build, such as installing dependencies, restoring, building, etc.
-      # Example: Install dependencies, build the app
+      # Set up .NET and build the application
       - name: Set up .NET
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0'  # Adjust according to your project's .NET version
 
@@ -29,9 +28,15 @@ jobs:
       - name: Build project
         run: dotnet build
 
-      # Optionally, add test steps
-      - name: Run tests
-        run: dotnet test
+      # Publish the app for deployment and upload the artifact
+      - name: Publish project
+        run: dotnet publish -c Release -o ./publish
+
+      - name: Upload publish artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: publish
+          path: ./publish  # Upload the 'publish' directory
 
   deploy:
     runs-on: ubuntu-latest
@@ -41,8 +46,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Download publish folder
-        uses: actions/download-artifact@v4
+      - name: Download publish artifact
+        uses: actions/download-artifact@v3
         with:
           name: publish
           path: ./publish
