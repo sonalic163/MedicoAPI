@@ -18,7 +18,7 @@ namespace MedicoAPI.Models
         [Key]
         public int doctorId { get; set; }
         public string doctorName { get; set; }
-        public byte[] doctorImg { get; set; }
+        public byte[]? doctorImg { get; set; }
      
     }
 
