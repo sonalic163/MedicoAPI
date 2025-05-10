@@ -3,10 +3,10 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # Trigger the pipeline on pushes to the 'main' branch
+      - main  # Adjust the branch as per your requirement
   pull_request:
     branches:
-      - main  # Trigger the pipeline on pull requests targeting 'main'
+      - main  # Adjust if you need to trigger the workflow for PRs
 
 jobs:
   build:
@@ -16,29 +16,31 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # Set up .NET and build the application
       - name: Set up .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0'  # Specify the version of .NET you are using
+          dotnet-version: '8.0'  # Adjust according to your project's .NET version
 
       - name: Restore dependencies
-        run: dotnet restore  # Restore project dependencies
+        run: dotnet restore
 
       - name: Build project
-        run: dotnet build  # Build the project
+        run: dotnet build
 
+      # Publish the app for deployment and upload the artifact
       - name: Publish project
-        run: dotnet publish -c Release -o ./publish  # Publish the project for deployment
+        run: dotnet publish -c Release -o ./publish
 
       - name: Upload publish artifact
         uses: actions/upload-artifact@v4
         with:
-          name: publish  # Name the artifact for downloading in the deploy job
-          path: ./publish  # Path to the publish directory created by dotnet publish
+          name: publish
+          path: ./publish  # Upload the 'publish' directory
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build  # Ensure the deploy job only runs after the build job has completed successfully
+    needs: build  # Ensure deploy only runs after build
 
     steps:
       - name: Checkout code
@@ -47,14 +49,14 @@ jobs:
       - name: Download publish artifact
         uses: actions/download-artifact@v4
         with:
-          name: publish  # Name of the artifact to download (must match the name used in the build job)
-          path: ./publish  # Path where the artifact will be downloaded
+          name: publish
+          path: ./publish  # Path to download the 'publish' artifact
 
       - name: Add SSH host to known hosts
         run: |
-          mkdir -p ~/.ssh
-          ssh-keyscan -H $HOST >> ~/.ssh/known_hosts  # Automatically add your server's SSH key to known hosts
-          chmod 644 ~/.ssh/known_hosts
+          mkdir -p ~/.ssh  # Create the .ssh directory if it does not exist
+          ssh-keyscan -t rsa $HOST >> ~/.ssh/known_hosts  # Add the server's SSH key to known_hosts
+          chmod 644 ~/.ssh/known_hosts  # Set proper permissions for known_hosts file
 
       - name: Deploy to server
         env:
@@ -63,9 +65,9 @@ jobs:
           PRIVATE_KEY: ${{ secrets.MEDICO_KEY }}  # Secret storing your private SSH key
         run: |
           echo "$PRIVATE_KEY" > private_key.pem  # Write the private key to a file
-          chmod 600 private_key.pem  # Set proper permissions on the private key
-          scp -i private_key.pem -r ./publish $USER@$HOST:/home/ubuntu/api-deploy/  # Secure copy to server
-          ssh -i private_key.pem $USER@$HOST << EOF  # SSH into the server and restart the service
+          chmod 600 private_key.pem  # Set permissions on the private key
+          scp -i private_key.pem -r ./publish $USER@$HOST:/home/ubuntu/api-deploy/  # SCP the published files to the server
+          ssh -i private_key.pem $USER@$HOST << EOF  # SSH into the server to restart the service
             cd /home/ubuntu/api-deploy
-            sudo systemctl restart kestrel-api  # Restart your Kestrel API service
+            sudo systemctl restart kestrel-api  # Restart the Kestrel API service
           EOF
