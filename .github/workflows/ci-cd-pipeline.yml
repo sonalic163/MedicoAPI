@@ -55,8 +55,10 @@ jobs:
       - name: Add SSH host to known hosts
         run: |
           mkdir -p ~/.ssh  # Create the .ssh directory if it does not exist
+          echo "Adding SSH key for $HOST to known hosts"
           ssh-keyscan -t rsa $HOST >> ~/.ssh/known_hosts  # Add the server's SSH key to known_hosts
           chmod 644 ~/.ssh/known_hosts  # Set proper permissions for known_hosts file
+
 
       - name: Deploy to server
         env:
