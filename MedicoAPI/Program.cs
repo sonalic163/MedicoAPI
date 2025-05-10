@@ -12,6 +12,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.WebHost.UseUrls("http://0.0.0.0:5000");
+
 //builder.Services.AddDbContext<ApplicationDbContext>(options =>
 //{
 //    string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
