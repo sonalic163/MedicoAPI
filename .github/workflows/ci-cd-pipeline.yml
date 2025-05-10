@@ -52,29 +52,20 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -t rsa 65.0.21.113 >> ~/.ssh/known_hosts
 
-      - name: Set up SSH agent
-        run: |
-          mkdir -p ~/.ssh
-          echo "$PRIVATE_KEY" | base64 -d > ~/.ssh/private_key.pem
-          chmod 600 ~/.ssh/private_key.pem
-          eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/private_key.pem
-
       - name: Deploy to EC2 instance
         env:
           HOST: 65.0.21.113
           USER: ubuntu
           PRIVATE_KEY: ${{ secrets.MEDICO_KEY }}
         run: |
+          echo "$PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+
           # Copy files to server
-          scp -i ~/.ssh/private_key.pem -o StrictHostKeyChecking=no -r ./publish $USER@$HOST:/home/ubuntu/api-deploy/
+          scp -i private_key.pem -o StrictHostKeyChecking=no -r ./publish $USER@$HOST:/home/ubuntu/api-deploy/
 
           # SSH into server and restart the service
-          ssh -i ~/.ssh/private_key.pem -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
             cd /home/ubuntu/api-deploy
             sudo systemctl restart kestrel-api
           EOF
-          
-      - name: Clean up
-        run: |
-          rm -rf ./publish
