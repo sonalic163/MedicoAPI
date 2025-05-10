@@ -45,7 +45,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Download publish artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: publish  # Name of the artifact to download (must match the name used in the build job)
           path: ./publish  # Path where the artifact will be downloaded
