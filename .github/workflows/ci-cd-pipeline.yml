@@ -33,7 +33,7 @@ jobs:
         run: dotnet publish -c Release -o ./publish
 
       - name: Upload publish artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: publish
           path: ./publish  # Upload the 'publish' directory
@@ -58,15 +58,21 @@ jobs:
           ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
           chmod 644 ~/.ssh/known_hosts
 
+      - name: Set up SSH key for deployment
+        run: |
+          echo "$PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+
       - name: Deploy to server
         env:
           HOST: 65.0.21.113
           USER: ubuntu
           PRIVATE_KEY: ${{ secrets.MEDICO_KEY }}
         run: |
-          echo "$PRIVATE_KEY" > private_key.pem
-          chmod 600 private_key.pem
+          # Upload the publish folder
           scp -i private_key.pem -r ./publish $USER@$HOST:/home/ubuntu/api-deploy/
+
+          # Restart the Kestrel API service after deployment
           ssh -i private_key.pem $USER@$HOST << EOF
             cd /home/ubuntu/api-deploy
             sudo systemctl restart kestrel-api
