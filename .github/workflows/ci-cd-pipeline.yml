@@ -3,10 +3,10 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # Adjust the branch as per your requirement
+      - main
   pull_request:
     branches:
-      - main  # Adjust if you need to trigger the workflow for PRs
+      - main
 
 jobs:
   build:
@@ -16,19 +16,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Set up .NET and build the application
       - name: Set up .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0'  # Adjust according to your project's .NET version
+          dotnet-version: '8.0'
 
       - name: Restore dependencies
         run: dotnet restore
 
       - name: Build project
-        run: dotnet build
+        run: dotnet build --no-restore
 
-      # Publish the app for deployment and upload the artifact
       - name: Publish project
         run: dotnet publish -c Release -o ./publish
 
@@ -36,40 +34,38 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: publish
-          path: ./publish  # Upload the 'publish' directory
+          path: ./publish
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build  # Ensure deploy only runs after build
+    needs: build
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
       - name: Download publish artifact
         uses: actions/download-artifact@v4
         with:
           name: publish
-          path: ./publish  # Path to download the 'publish' artifact
+          path: ./publish
 
       - name: Add SSH host to known hosts
         run: |
-          mkdir -p ~/.ssh  # Create the .ssh directory if it does not exist
-          echo "Adding SSH key for $HOST to known hosts"
-          ssh-keyscan -t rsa $HOST >> ~/.ssh/known_hosts  # Add the server's SSH key to known_hosts
-          chmod 644 ~/.ssh/known_hosts  # Set proper permissions for known_hosts file
+          mkdir -p ~/.ssh
+          ssh-keyscan -t rsa 65.0.21.113 >> ~/.ssh/known_hosts
 
-
-      - name: Deploy to server
+      - name: Deploy to EC2 instance
         env:
-          HOST: 65.0.21.113  # Replace with your server's IP or hostname
-          USER: ubuntu  # Replace with your SSH user
-          PRIVATE_KEY: ${{ secrets.MEDICO_KEY }}  # Secret storing your private SSH key
+          HOST: 65.0.21.113
+          USER: ubuntu
+          PRIVATE_KEY: ${{ secrets.MEDICO_KEY }}
         run: |
-          echo "$PRIVATE_KEY" > private_key.pem  # Write the private key to a file
-          chmod 600 private_key.pem  # Set permissions on the private key
-          scp -i private_key.pem -r ./publish $USER@$HOST:/home/ubuntu/api-deploy/  # SCP the published files to the server
-          ssh -i private_key.pem $USER@$HOST << EOF  # SSH into the server to restart the service
+          echo "$PRIVATE_KEY" > private_key.pem
+          chmod 600 private_key.pem
+
+          # Copy files to server
+          scp -i private_key.pem -o StrictHostKeyChecking=no -r ./publish $USER@$HOST:/home/ubuntu/api-deploy/
+
+          # SSH into server and restart the service
+          ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
             cd /home/ubuntu/api-deploy
-            sudo systemctl restart kestrel-api  # Restart the Kestrel API service
+            sudo systemctl restart kestrel-api
           EOF
