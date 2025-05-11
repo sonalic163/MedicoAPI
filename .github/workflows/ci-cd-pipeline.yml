@@ -50,11 +50,11 @@ jobs:
       - name: Add SSH host to known hosts
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan -t rsa 65.0.21.113 >> ~/.ssh/known_hosts
+          ssh-keyscan -t rsa 13.203.215.126 >> ~/.ssh/known_hosts
 
       - name: Deploy to EC2 instance
         env:
-          HOST: 65.0.21.113
+          HOST: 13.203.215.126
           USER: ubuntu
           PRIVATE_KEY: ${{ secrets.MEDICO_KEY }}
         run: |
