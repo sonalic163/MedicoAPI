@@ -62,10 +62,10 @@ jobs:
           chmod 600 private_key.pem
 
           # Copy files to server
-          scp -i private_key.pem -o StrictHostKeyChecking=no -r ./publish $USER@$HOST:/home/ubuntu/api-deploy/
+          scp -i private_key.pem -o StrictHostKeyChecking=no -r ./publish $USER@$HOST:/home/ubuntu/api-deploy/publish
 
           # SSH into server and restart the service
           ssh -i private_key.pem -o StrictHostKeyChecking=no $USER@$HOST << 'EOF'
-            cd /home/ubuntu/api-deploy
+            cd /home/ubuntu/api-deploy/publish
             sudo systemctl restart kestrel-api
           EOF

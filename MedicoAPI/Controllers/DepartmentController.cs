@@ -121,40 +121,6 @@ namespace MedicoAPI.Controllers
             }
         }
 
-        [HttpGet("GetDoctorsInfoAgainAgain")]
-
-        public IActionResult GetDoctorsInfoAgainAgain()
-        {
-            try
-            {
-                var getdept = _unitOfWork.departmentService.GetDoctorsInfo();
-
-                if (getdept.Count() != 0)
-                {
-                    var responseData = new
-                    {
-                        status = 200,
-                        data = getdept
-                    };
-                    return Ok(responseData);
-                }
-                else
-                {
-                    var responseData = new
-                    {
-                        status = 201,
-                        data = new List<object>()
-                    };
-                    return Ok(responseData);
-                }
-            }
-            catch (Exception ex)
-            {
-                var Response_Body = ex.Message;
-                return BadRequest(Response_Body);
-            }
-        }
-
         [HttpGet("GetDoctorsById")]
         public IActionResult GetDoctorsById(int doctorId)
         {
