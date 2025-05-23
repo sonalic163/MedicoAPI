@@ -11,10 +11,7 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/publish .
 
-# Optional: specify exposed port for documentation (e.g., 8080)
-EXPOSE 8080
-
 # Optional: ensure ASP.NET Core binds to all IPs and correct port
-ENV ASPNETCORE_URLS=http://+:8080
+ENV ASPNETCORE_HTTP_PORTS=5005
 
 ENTRYPOINT ["dotnet", "MedicoAPI.dll"]

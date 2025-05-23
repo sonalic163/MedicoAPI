@@ -2,23 +2,21 @@
 
 services:
   mysql:
-    image: mysql:8.0
+    image: sonali334/mysql:8.0
     ports:
-      - "3307:3306"
+      - "3305:3306"
     environment:
-      MYSQL_ROOT_PASSWORD: Propix@123
+      MYSQL_ROOT_PASSWORD: "Propix123"
       MYSQL_DATABASE: medicodb
       MYSQL_USER: admin
-      MYSQL_PASSWORD: adminpassword
-    volumes:
-      - C:/Users/scpt454/source/repos/data:/var/lib/mysql
+      MYSQL_PASSWORD: "adminpassword"
     networks:
       - mysqlnet
 
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin
+    image: sonali334/phpmyadmin:latest
     ports:
-      - "8002:80"
+      - "8005:80"
     environment:
       PMA_HOST: mysql
       PMA_PORT: 3306
@@ -28,12 +26,12 @@ services:
       - mysqlnet
 
   webapi:
-    image: sonali334/medicoapi:latest
+    image: sonali334/api:latest
     build:
       context: .
       dockerfile: Dockerfile    
     ports: 
-      - "5002:8080"
+      - "5005:8080"
     depends_on: 
       - mysql
     environment:
